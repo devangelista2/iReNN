@@ -11,6 +11,10 @@ from scipy import io
 import skimage
 from skimage import transform
 
+# Disable Tf Warnings
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
 # Noise is added by noise level
 def get_gaussian_noise(y, noise_level=0.01):
     noise = np.random.normal(size=y.shape) # random gaussian distribution
@@ -53,6 +57,13 @@ solver = iReNN(A, (M, N), './model_weights')
 
 # Solution
 x_sol = solver(y_delta, epsilon, lmbda, iterative_schedule, H=H, K_schedule=K, x_true=x_true, p=p)
+
+plt.subplot(1, 2, 1)
+plt.imshow(x_true.reshape((256, 256)), cmap='gray')
+
+plt.subplot(1, 2, 2)
+plt.imshow(x_sol[:, 5].reshape((256, 256)), cmap='gray')
+plt.show()
 
 # Save the solution
 np.save(f'./results/COULE_{algorithm}_{idx}.npy', x_sol)

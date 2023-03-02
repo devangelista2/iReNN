@@ -22,7 +22,7 @@ class iCP_TV:
         self.grad = operators.myGradient(1, (self.M, self.N))
 
         # Continuation parameter
-        self.alpha = 0.5
+        self.alpha = 0.75
 
         # Other
         self.info = info
@@ -144,7 +144,7 @@ class iReNN:
             if iterative_schedule[h] == 0:
                 x_h = self.CP_TV(y, epsilon=epsilon, lmbda=lmbda, maxiter=K_schedule[h], x_true=x_true, starting_point=x0, p=p, eta=2e-3)
             else:
-                model = ks.models.load_model(f"{self.weights_path}/iReNN_{h}to{h+1}.h5", custom_objects={'SSIM': metrics.SSIM})
+                model = ks.models.load_model(f"{self.weights_path}/iReNN_{h-1}to{h}.h5", custom_objects={'SSIM': metrics.SSIM})
                 x_h = self.predict(model, x0)
 
             # Compute the value of the objective function TpV by reweighting
@@ -179,5 +179,5 @@ class iReNN:
 
     def predict(self, model, x):
         x = np.reshape(x, (1, self.M, self.N, 1))
-        y = model.predict(x)
+        y = model.predict(x, verbose=0)
         return np.expand_dims(y.flatten(), -1)

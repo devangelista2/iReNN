@@ -19,7 +19,7 @@ CP_TV_algorithm = {'H': 2,
 
 iReNN_algorithm = {'H': 10,
                    'K': np.concatenate((80 * np.ones((5, ), dtype=int), 30 * np.ones((5, ), dtype=int))),
-                   'iterative_schedule': np.array([0, 1, 1, 1, 1, 1, 1, 1, 1, 0]),
+                   'iterative_schedule': np.array([0, 0, 0, 0, 0, 1, 1, 1, 1, 0]),
                    'p': 1,
                    'lmbda': 1,
                    }
