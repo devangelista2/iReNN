@@ -20,12 +20,12 @@ def get_gaussian_noise(y, noise_level=0.01):
 
 # True image
 idx = 0
-x_true = plt.imread(f'./data/COULE_test/{idx}.png')[:, :, 0]
+x_true = np.load(f'./data/COULE_test/{idx}.npy')
 x_true = transform.resize(x_true, (256, 256))
 M, N = x_true.shape
 
 # Forward problem
-A = operators.CTProjector(256, 256, np.linspace(0, np.pi, 120), det_size=367, geometry='parallel')
+A = operators.CTProjector(256, 256, np.linspace(0, np.pi, 120), det_size=367, geometry='fanflat')
 
 # Noiseless y
 y = A(x_true)
@@ -48,14 +48,14 @@ p = parameters['p']
 lmbda = parameters['lmbda']
 epsilon = 1e-5 * np.max(y) * np.sqrt(len(y))
 
-H = parameters['H']
 K = parameters['K']
+H = parameters['H']
 
 # Solver
 solver = iCP_TV(A, (M, N))
 
 # Solution
-x_sol = solver(y_delta, epsilon, lmbda, H=H, K=K, x_true=x_true, p=p)
+x_sol = solver(y_delta, epsilon, lmbda, H=H, K_schedule=K, x_true=x_true, p=p)
 
 # Save the solution
-# np.save(f'./results/COULE_{algorithm}_{idx}.npy', x_sol)
+np.save(f'./results/COULE_{algorithm}_{idx}.npy', x_sol)
